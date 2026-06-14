@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder AI - Career Skill Gap Analyzer</title>
+    <meta name="description" content="Instantly analyze your professional skills, compare them against target careers, and generate a step-by-step personalized learning roadmap.">
+    <!-- Links to CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- 1. Header / Navigation -->
+    <header>
+        <div class="container">
+            <a href="#" class="logo">
+                <span class="logo-icon">P</span>
+                Pathfinder AI
+            </a>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#simulator">Simulator</a>
+                <a href="#hero">How It Works</a>
+            </nav>
+            <a href="#simulator" class="btn btn-secondary">Try Simulator</a>
+        </div>
+    </header>
+
+    <!-- 2. Hero Section -->
+    <section id="hero" class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                
+                <!-- Left Hero Content -->
+                <div class="hero-content">
+                    <h1>Bridge the Gap to Your <span class="gradient-text">Dream Career</span></h1>
+                    <p>
+                        Input your current skills, select a target career path, and instantly discover your custom skill gap. We calculate your readiness and build a step-by-step roadmap to get you hired.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#simulator" class="btn btn-primary">Start Analyzing Free</a>
+                        <a href="#features" class="btn btn-secondary">Learn More</a>
+                    </div>
+                </div>
+
+                <!-- Right Hero Dashboard Mockup -->
+                <div class="hero-visual">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <div class="mockup-dot"></div>
+                            <div class="mockup-dot"></div>
+                            <div class="mockup-dot"></div>
+                        </div>
+                        <div class="mockup-title">Readiness Dashboard</div>
+                    </div>
+                    <div class="mockup-chart-row">
+                        <div class="mockup-chart"></div>
+                        <div class="mockup-skills-list">
+                            <div class="mockup-skill-item">
+                                <span>Skill 1</span>
+                                <span class="mockup-status has"></span>
+                            </div>
+                            <div class="mockup-skill-item">
+                                <span>Skill 2</span>
+                                <span class="mockup-status missing"></span>
+                            </div>
+                            <div class="mockup-skill-item">
+                                <span>Skill 3</span>
+                                <span class="mockup-status has"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Core Simulator Section -->
+    <section id="simulator" class="simulator-section">
+        <div class="container">
+            
+            <div class="section-header">
+                <h2>Skill Gap Analyzer</h2>
+                <p>Input your current technical skills and select your target role to calculate your readiness score.</p>
+            </div>
+
+            <!-- Simulator Input Card -->
+            <div class="simulator-card">
+                <div class="steps-grid">
+                    
+                    <!-- Step 1: Input Current Skills -->
+                    <div class="step-container">
+                        <div class="step-label">
+                            <span class="step-number">1</span>
+                            Add Your Current Skills
+                        </div>
+                        <div class="skills-input-wrapper">
+                            <div class="input-group">
+                                <input type="text" id="skill-input" class="text-input" placeholder="Type a skill (e.g. JavaScript, SQL) and press Enter" aria-label="Add a skill">
+                                <button type="button" id="btn-add-skill" class="btn btn-primary">Add</button>
+                            </div>
+                            
+                            <!-- Skill suggestions -->
+                            <div>
+                                <div class="suggestions-title">Suggestions:</div>
+                                <div class="suggestions-list">
+                                    <button type="button" class="btn-suggestion" data-skill="React">React</button>
+                                    <button type="button" class="btn-suggestion" data-skill="SQL">SQL</button>
+                                    <button type="button" class="btn-suggestion" data-skill="Figma">Figma</button>
+                                    <button type="button" class="btn-suggestion" data-skill="Git">Git</button>
+                                    <button type="button" class="btn-suggestion" data-skill="Excel">Excel</button>
+                                    <button type="button" class="btn-suggestion" data-skill="Linux">Linux</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Main skills tags list -->
+                            <div id="skills-container" class="skills-container">
+                                <!-- Populated dynamically by script.js -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Choose Target Career -->
+                    <div class="step-container">
+                        <div class="step-label">
+                            <span class="step-number">2</span>
+                            Select Target Career Path
+                        </div>
+                        <div class="career-grid">
+                            
+                            <!-- Career Option 1 -->
+                            <div class="career-card" data-career="frontend-dev">
+                                <div class="career-icon">🌐</div>
+                                <h4>Frontend Developer</h4>
+                                <p>HTML, CSS, React, Git, Webpack...</p>
+                            </div>
+
+                            <!-- Career Option 2 -->
+                            <div class="career-card" data-career="data-scientist">
+                                <div class="career-icon">📊</div>
+                                <h4>Data Scientist</h4>
+                                <p>Python, SQL, Pandas, Machine Learning...</p>
+                            </div>
+
+                            <!-- Career Option 3 -->
+                            <div class="career-card" data-career="product-manager">
+                                <div class="career-icon">🎯</div>
+                                <h4>Product Manager</h4>
+                                <p>Agile, Wireframing, Data, Strategy...</p>
+                            </div>
+
+                            <!-- Career Option 4 -->
+                            <div class="career-card" data-career="cybersecurity-analyst">
+                                <div class="career-icon">🛡️</div>
+                                <h4>Cyber Security</h4>
+                                <p>Networking, Linux, Hacking, Wireshark...</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Action trigger -->
+                <div class="analyzer-action-wrapper">
+                    <button type="button" id="btn-analyze" class="btn btn-primary btn-large">Analyze Skill Gap</button>
+                </div>
+            </div>
+
+            <!-- 4. Simulator Results Panel (Initially hidden, revealed on analysis) -->
+            <div id="results-section" class="results-section">
+                <div class="results-grid">
+                    
+                    <!-- Left Panel: Score Gauge -->
+                    <div class="results-left">
+                        <div class="readiness-title">Your Career Readiness</div>
+                        <div class="progress-ring-container">
+                            <svg class="progress-ring" width="160" height="160">
+                                <circle class="progress-ring-circle-bg" cx="80" cy="80" r="70" />
+                                <circle id="progress-circle" class="progress-ring-circle" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="440" />
+                            </svg>
+                            <div id="readiness-score-text" class="progress-text">0%</div>
+                        </div>
+                        <span id="readiness-label" class="readiness-level">Aspiring</span>
+                        <p id="readiness-desc" class="score-description">
+                            We compare your current skills against the industry standards for this job profile.
+                        </p>
+                    </div>
+
+                    <!-- Right Panel: Gap & Roadmap -->
+                    <div class="results-right">
+                        
+                        <!-- Skills Comparison lists -->
+                        <div class="results-skills-comparison">
+                            <!-- Matched skills -->
+                            <div class="skills-list-box">
+                                <h5 class="matched">Matched Skills <span id="matched-count" class="badge-count">0</span></h5>
+                                <div id="matched-skills-list" class="result-pills">
+                                    <!-- Populated by script.js -->
+                                </div>
+                            </div>
+                            
+                            <!-- Missing skills (gap) -->
+                            <div class="skills-list-box">
+                                <h5 class="missing">Missing Skills (Gap) <span id="missing-count" class="badge-count">0</span></h5>
+                                <div id="missing-skills-list" class="result-pills">
+                                    <!-- Populated by script.js -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Roadmap Timeline -->
+                        <div class="roadmap-container">
+                            <h5>Your Learning Roadmap</h5>
+                            <div id="roadmap-timeline" class="roadmap-timeline">
+                                <!-- Populated by script.js -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5. Features Grid Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Pathfinder AI?</h2>
+                <p>Equipping students with precise data to make intelligent career jumps.</p>
+            </div>
+            
+            <div class="features-grid">
+                
+                <!-- Feature 1 -->
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper">⚡</div>
+                    <h3>Real-time Gap Analysis</h3>
+                    <p>Input your skills and instantly see where you stack up against real-world tech careers. No wait time, no complications.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper">🗺️</div>
+                    <h3>Personalized Roadmap</h3>
+                    <p>Get a sequential, step-by-step training checklist showing which missing skills to study first, and what concepts to focus on.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper">📈</div>
+                    <h3>Market Aligned Roles</h3>
+                    <p>Skill requirements are modeled from active job posts and standard developer certifications, ensuring you learn what is relevant.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Pathfinder AI. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script loading -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
