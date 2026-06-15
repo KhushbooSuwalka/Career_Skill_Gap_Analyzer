@@ -36,6 +36,19 @@ def init_database():
         )
     ''')
     
+    # Create skill_checks table for history archiving
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS skill_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            career_id TEXT NOT NULL,
+            career_title TEXT NOT NULL,
+            readiness_score INTEGER NOT NULL,
+            user_skills TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (career_id) REFERENCES careers (id)
+        )
+    ''')
+    
     # Seed 16 careers data
     careers_data = [
         ("frontend-dev", "Frontend Developer", "Builds user interfaces and dynamic web applications."),

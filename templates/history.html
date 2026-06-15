@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Records - Pathfinder AI</title>
+    <meta name="description" content="Access your previous career skill assessment logs and custom learning roadmaps.">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#090d16',
+                        bgCard: '#131b2e',
+                        bgCardHover: '#1b253f',
+                        borderColor: '#222f4d',
+                        borderHover: '#3b82f6',
+                        primary: '#6366f1',
+                        primaryHover: '#4f46e5',
+                        success: '#10b981',
+                        danger: '#f43f5e',
+                        warning: '#f59e0b',
+                        textMain: '#f8fafc',
+                        textMuted: '#94a3b8',
+                        textDark: '#64748b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222f4d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-bgDark text-textMain font-sans relative overflow-x-hidden min-h-screen">
+
+    <!-- Glowing background blurs -->
+    <div class="absolute top-[5%] left-[-10%] w-[35rem] h-[35rem] rounded-full bg-primary/10 blur-[120px] -z-10 pointer-events-none"></div>
+    <div class="absolute top-[45%] right-[-10%] w-[35rem] h-[35rem] rounded-full bg-success/10 blur-[120px] -z-10 pointer-events-none"></div>
+
+    <!-- 1. Header / Navigation -->
+    <header class="border-b border-borderColor bg-bgDark/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center h-20">
+            <a href="/" class="flex items-center gap-2.5 font-heading font-extrabold text-[1.3rem] text-textMain no-underline">
+                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">P</span>
+                Pathfinder AI
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="/" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">Simulator</a>
+                <a href="/history" class="text-textMain font-semibold text-[0.95rem] transition-colors duration-200">My Records</a>
+            </nav>
+            <a href="/" class="border border-borderColor text-textMain font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] hover:bg-white/5 hover:border-textMuted transition-all duration-200">Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-[1000px] mx-auto px-6 py-16">
+        
+        <!-- Header area -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+            <div>
+                <h1 class="font-heading font-bold text-4xl mb-2">My Skill Assessment Records</h1>
+                <p class="text-textMuted text-lg">Browse your previous career readiness checks, skill gaps, and learning roadmaps.</p>
+            </div>
+            {% if history_records %}
+                <form action="/clear_history" method="POST" onsubmit="return confirm('Are you sure you want to permanently clear all assessment logs? This cannot be undone.');">
+                    <button type="submit" class="border border-danger/40 hover:border-danger bg-danger/10 hover:bg-danger/25 text-danger font-semibold text-[0.9rem] px-5 py-2.5 rounded-[0.6rem] transition-all duration-200">
+                        Clear All History
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Records List -->
+        <div class="flex flex-col gap-8">
+            {% if not history_records %}
+                <!-- Empty state -->
+                <div class="bg-bgCard border border-borderColor rounded-2xl p-12 text-center flex flex-col items-center gap-5 shadow-lg">
+                    <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-4xl">🗂️</div>
+                    <h3 class="font-heading font-bold text-xl">No Records Found</h3>
+                    <p class="text-textMuted max-w-sm leading-relaxed">You haven't run any career skill assessments yet. Run your first check to generate a roadmap!</p>
+                    <a href="/" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-8 py-3 rounded-[0.6rem] transition-all duration-200">
+                        Analyze Skill Gap Now
+                    </a>
+                </div>
+            {% else %}
+                {% for record in history_records %}
+                    <div class="bg-bgCard border border-borderColor rounded-2xl p-6 md:p-8 flex flex-col gap-6 shadow-md relative overflow-hidden">
+                        
+                        <!-- Top header info -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-borderColor/60 pb-5">
+                            <div class="flex items-center gap-4">
+                                <span class="text-4xl shrink-0">{{ career_icons[record.career_id] or '💼' }}</span>
+                                <div>
+                                    <h3 class="font-heading font-bold text-2xl text-textMain">{{ record.career_title }}</h3>
+                                    <span class="text-[0.8rem] text-textDark font-medium">{{ record.timestamp }}</span>
+                                </div>
+                            </div>
+                            <!-- Circular score badge -->
+                            <div class="flex items-center gap-3 self-start sm:self-auto bg-black/20 border border-borderColor/40 rounded-xl px-4 py-2">
+                                <span class="text-textMuted font-medium text-sm">Readiness:</span>
+                                <span class="font-heading font-extrabold text-xl {% if record.readiness_score >= 80 %}text-success{% elif record.readiness_score >= 40 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ record.readiness_score }}%
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Summary of skills and tags -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Matched skills -->
+                            <div class="bg-white/1 border border-borderColor rounded-xl p-4 flex flex-col gap-3">
+                                <span class="text-[0.9rem] font-bold text-success flex items-center gap-2">
+                                    Matched Skills ({{ record.matched_skills | length }})
+                                </span>
+                                <div class="flex flex-wrap gap-1.5">
+                                    {% if not record.matched_skills %}
+                                        <span class="text-[0.8rem] text-textDark italic">None matching at this check.</span>
+                                    {% else %}
+                                        {% for skill in record.matched_skills %}
+                                            <span class="text-[0.75rem] px-2.5 py-0.5 rounded-full font-medium bg-success/10 border border-success/30 text-emerald-400">✓ {{ skill }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Missing skills -->
+                            <div class="bg-white/1 border border-borderColor rounded-xl p-4 flex flex-col gap-3">
+                                <span class="text-[0.9rem] font-bold text-danger flex items-center gap-2">
+                                    Missing Gaps ({{ record.missing_skills | length }})
+                                </span>
+                                <div class="flex flex-wrap gap-1.5">
+                                    {% if not record.missing_skills %}
+                                        <span class="text-[0.75rem] text-emerald-400 font-semibold">Ready! No gaps remaining.</span>
+                                    {% else %}
+                                        {% for skill in record.missing_skills %}
+                                            <span class="text-[0.75rem] px-2.5 py-0.5 rounded-full font-medium bg-danger/10 border border-danger/30 text-rose-400">✗ {{ skill }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Trigger for Roadmap -->
+                        <div class="flex flex-wrap justify-between items-center gap-4 mt-2">
+                            <button type="button" class="roadmap-toggle-btn bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary font-semibold text-[0.9rem] px-5 py-2.5 rounded-[0.6rem] transition-all duration-200 flex items-center gap-2" data-record-id="{{ record.id }}">
+                                🗺️ View Step-by-Step Learning Plan
+                                <svg id="chevron-{{ record.id }}" class="w-4 h-4 fill-current transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                                </svg>
+                            </button>
+                            
+                            <!-- Delete button -->
+                            <form action="/delete_history/{{ record.id }}" method="POST" onsubmit="return confirm('Delete this record permanently?');">
+                                <button type="submit" class="text-textDark hover:text-danger hover:bg-danger/10 font-medium text-[0.85rem] px-4 py-2 rounded-[0.5rem] transition-all duration-200">
+                                    Delete Record
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Collapsible Roadmap Timeline -->
+                        <div id="roadmap-accordion-{{ record.id }}" class="hidden border-t border-borderColor/60 pt-6 mt-4 animate-fade-in">
+                            <h4 class="font-heading font-semibold text-lg mb-6">Learning Plan Roadmap</h4>
+                            <div class="relative flex flex-col pl-2">
+                                {% if not record.missing_skills %}
+                                    <div class="relative flex gap-4 pl-1">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-3 h-3 rounded-full border-2 border-bgCard bg-success z-10"></div>
+                                            <div class="w-0.5 h-full bg-borderColor z-0 -mt-0.5"></div>
+                                        </div>
+                                        <div class="pb-6">
+                                            <div class="text-[0.8rem] uppercase tracking-wider text-success font-bold mb-0.5">Fully Prepared</div>
+                                            <div class="text-[0.95rem] font-semibold text-textMain mb-1">All Gaps Solved!</div>
+                                            <div class="text-[0.85rem] text-textMuted">You matched all required core skills for {{ record.career_title }} when this check was run.</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% for step in record.roadmap %}
+                                    <div class="relative flex gap-4 pl-1">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-3 h-3 rounded-full border-2 border-bgCard {% if step.completed %}bg-success{% else %}bg-primary{% endif %} z-10"></div>
+                                            {% if not loop.last %}
+                                                <div class="w-0.5 h-full bg-borderColor z-0 -mt-0.5"></div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="pb-6">
+                                            <div class="text-[0.8rem] uppercase tracking-wider {% if step.completed %}text-success{% else %}text-primary{% endif %} font-bold mb-0.5">
+                                                {{ step.phase }} {% if step.completed %}✓ (Acquired){% else %}• (Learn Next){% endif %}
+                                            </div>
+                                            <div class="text-[0.95rem] font-semibold text-textMain mb-1">
+                                                {{ step.skill }}: {% if step.completed %}Verified Skill{% else %}Gap Identified{% endif %}
+                                            </div>
+                                            <div class="text-[0.85rem] text-textMuted">
+                                                {% if step.completed %}
+                                                    You already know <strong>{{ step.skill }}</strong>. This foundational step is completed!
+                                                {% else %}
+                                                    {{ step.topic }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-borderColor py-12 mt-20 bg-bgDark">
+        <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-sm text-textMuted">&copy; 2026 Pathfinder AI. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Terms of Use</a>
+                <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Accordion Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".roadmap-toggle-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    const recordId = button.getAttribute("data-record-id");
+                    const accordion = document.getElementById(`roadmap-accordion-${recordId}`);
+                    const chevron = document.getElementById(`chevron-${recordId}`);
+                    if (accordion) {
+                        const isHidden = accordion.classList.contains("hidden");
+                        if (isHidden) {
+                            accordion.classList.remove("hidden");
+                            chevron.classList.add("rotate-180");
+                        } else {
+                            accordion.classList.add("hidden");
+                            chevron.classList.remove("rotate-180");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

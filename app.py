@@ -200,6 +200,20 @@ def analyze():
             "roadmap": processed_roadmap
         }
         
+        # Archive results to history database
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            import json
+            cursor.execute(
+                "INSERT INTO skill_checks (career_id, career_title, readiness_score, user_skills) VALUES (?, ?, ?, ?)",
+                (career_id, career_meta['title'], readiness_score, json.dumps(user_skills))
+            )
+            conn.commit()
+            conn.close()
+        except Exception as he:
+            print("Failed to save history record:", he)
+        
     except Exception as e:
         print("Analysis error:", e)
         return redirect(url_for('index'))
@@ -208,6 +222,99 @@ def analyze():
     session['selected_career_id'] = career_id
     session.modified = True
     return redirect(url_for('index'))
+
+@app.route('/history')
+def history():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, career_id, career_title, readiness_score, user_skills, timestamp FROM skill_checks ORDER BY timestamp DESC")
+        rows = cursor.fetchall()
+        
+        import json
+        history_records = []
+        for row in rows:
+            u_skills = json.loads(row['user_skills'])
+            
+            # Reconstruct historic results
+            cursor.execute(
+                "SELECT skill, phase, topic, sort_order FROM roadmap_steps WHERE career_id = ? ORDER BY sort_order",
+                (row['career_id'],)
+            )
+            roadmap_steps = cursor.fetchall()
+            
+            matched_skills = []
+            missing_skills = []
+            processed_roadmap = []
+            
+            u_skills_upper = [s.upper() for s in u_skills]
+            for step in roadmap_steps:
+                skill_name = step['skill']
+                skill_name_upper = skill_name.upper()
+                
+                is_matched = False
+                for u_skill in u_skills_upper:
+                    if u_skill == skill_name_upper or u_skill in skill_name_upper or skill_name_upper in u_skill:
+                        is_matched = True
+                        break
+                
+                if is_matched:
+                    matched_skills.append(skill_name)
+                else:
+                    missing_skills.append(skill_name)
+                    
+                processed_roadmap.append({
+                    "skill": skill_name,
+                    "phase": step['phase'],
+                    "topic": step['topic'],
+                    "completed": is_matched
+                })
+                
+            history_records.append({
+                "id": row['id'],
+                "career_id": row['career_id'],
+                "career_title": row['career_title'],
+                "readiness_score": row['readiness_score'],
+                "timestamp": row['timestamp'],
+                "user_skills": u_skills,
+                "matched_skills": matched_skills,
+                "missing_skills": missing_skills,
+                "roadmap": processed_roadmap
+            })
+        conn.close()
+    except Exception as e:
+        history_records = []
+        print("History fetch error:", e)
+        
+    return render_template(
+        'history.html',
+        history_records=history_records,
+        career_icons=CAREER_ICONS
+    )
+
+@app.route('/delete_history/<int:record_id>', methods=['POST'])
+def delete_history(record_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM skill_checks WHERE id = ?", (record_id,))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print("Delete history error:", e)
+    return redirect(url_for('history'))
+
+@app.route('/clear_history', methods=['POST'])
+def clear_history():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM skill_checks")
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print("Clear history error:", e)
+    return redirect(url_for('history'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
