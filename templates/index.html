@@ -5,68 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pathfinder AI - Career Skill Gap Analyzer</title>
     <meta name="description" content="Instantly analyze your professional skills, compare them against target careers, and generate a step-by-step personalized learning roadmap.">
-    <!-- Links to CSS -->
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#090d16',
+                        bgCard: '#131b2e',
+                        bgCardHover: '#1b253f',
+                        borderColor: '#222f4d',
+                        borderHover: '#3b82f6',
+                        primary: '#6366f1',
+                        primaryHover: '#4f46e5',
+                        success: '#10b981',
+                        danger: '#f43f5e',
+                        warning: '#f59e0b',
+                        textMain: '#f8fafc',
+                        textMuted: '#94a3b8',
+                        textDark: '#64748b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Small custom animations & styles not natively available in Tailwind */
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideDown {
+            0% { opacity: 0; transform: translateY(-15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: popIn 0.25s ease-out forwards;
+        }
+        .animate-slide-down {
+            animation: slideDown 0.5s ease-out forwards;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222f4d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+        /* Custom styling for select option elements to prevent browser default text invisibility */
+        select option {
+            background-color: #131b2e !important;
+            color: #ffffff !important;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-bgDark text-textMain font-sans relative overflow-x-hidden min-h-screen">
+
+    <!-- Glowing background blurs -->
+    <div class="absolute top-[5%] left-[-10%] w-[35rem] h-[35rem] rounded-full bg-primary/10 blur-[120px] -z-10 pointer-events-none"></div>
+    <div class="absolute top-[45%] right-[-10%] w-[35rem] h-[35rem] rounded-full bg-success/10 blur-[120px] -z-10 pointer-events-none"></div>
 
     <!-- 1. Header / Navigation -->
-    <header>
-        <div class="container">
-            <a href="#" class="logo">
-                <span class="logo-icon">P</span>
+    <header class="border-b border-borderColor bg-bgDark/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center h-20">
+            <a href="#" class="flex items-center gap-2.5 font-heading font-extrabold text-[1.3rem] text-textMain no-underline">
+                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">P</span>
                 Pathfinder AI
             </a>
-            <nav>
-                <a href="#features">Features</a>
-                <a href="#simulator">Simulator</a>
-                <a href="#hero">How It Works</a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">Features</a>
+                <a href="#simulator" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">Simulator</a>
+                <a href="#hero" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">How It Works</a>
             </nav>
-            <a href="#simulator" class="btn btn-secondary">Try Simulator</a>
+            <a href="#simulator" class="border border-borderColor text-textMain font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] hover:bg-white/5 hover:border-textMuted transition-all duration-200">Try Simulator</a>
         </div>
     </header>
 
     <!-- 2. Hero Section -->
-    <section id="hero" class="hero">
-        <div class="container">
-            <div class="hero-grid">
+    <section id="hero" class="py-20 relative">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
                 
                 <!-- Left Hero Content -->
-                <div class="hero-content">
-                    <h1>Bridge the Gap to Your <span class="gradient-text">Dream Career</span></h1>
-                    <p>
+                <div class="flex flex-col items-start text-left">
+                    <h1 class="font-heading font-bold text-5xl lg:text-6xl tracking-tight leading-tight mb-6">
+                        Bridge the Gap to Your <span class="bg-gradient-to-r from-indigo-300 via-primary to-indigo-700 bg-clip-text text-transparent">Dream Career</span>
+                    </h1>
+                    <p class="text-textMuted text-lg lg:text-xl mb-8 max-w-lg leading-relaxed">
                         Input your current skills, select a target career path, and instantly discover your custom skill gap. We calculate your readiness and build a step-by-step roadmap to get you hired.
                     </p>
-                    <div class="hero-actions">
-                        <a href="#simulator" class="btn btn-primary">Start Analyzing Free</a>
-                        <a href="#features" class="btn btn-secondary">Learn More</a>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#simulator" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-6 py-3.5 rounded-[0.6rem] hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:-translate-y-[1px] transition-all duration-200">Start Analyzing Free</a>
+                        <a href="#features" class="border border-borderColor text-textMain font-semibold text-[0.95rem] px-6 py-3.5 rounded-[0.6rem] hover:bg-white/5 hover:border-textMuted transition-all duration-200">Learn More</a>
                     </div>
                 </div>
 
                 <!-- Right Hero Dashboard Mockup -->
-                <div class="hero-visual">
-                    <div class="mockup-header">
-                        <div class="mockup-dots">
-                            <div class="mockup-dot"></div>
-                            <div class="mockup-dot"></div>
-                            <div class="mockup-dot"></div>
+                <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-borderColor rounded-[1.25rem] p-8 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-transparent before:pointer-events-none">
+                    <div class="flex justify-between items-center mb-6 border-b border-borderColor pb-4">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
                         </div>
-                        <div class="mockup-title">Readiness Dashboard</div>
+                        <div class="text-[0.8rem] text-textDark tracking-wider uppercase font-medium">Readiness Dashboard</div>
                     </div>
-                    <div class="mockup-chart-row">
-                        <div class="mockup-chart"></div>
-                        <div class="mockup-skills-list">
-                            <div class="mockup-skill-item">
+                    <div class="flex gap-6 items-center">
+                        <div class="w-[6.5rem] h-[6.5rem] rounded-full flex items-center justify-center" style="background: conic-gradient(#6366f1 70%, #222f4d 0);">
+                            <div class="w-[5.25rem] h-[5.25rem] bg-bgCard rounded-full flex items-center justify-center font-heading font-bold text-xl text-textMain">
+                                70%
+                            </div>
+                        </div>
+                        <div class="flex-grow flex flex-col gap-2.5">
+                            <div class="flex justify-between items-center bg-white/2 border border-borderColor px-3 py-2 rounded-lg text-[0.85rem]">
                                 <span>Skill 1</span>
-                                <span class="mockup-status has"></span>
+                                <span class="w-2 h-2 rounded-full bg-success"></span>
                             </div>
-                            <div class="mockup-skill-item">
+                            <div class="flex justify-between items-center bg-white/2 border border-borderColor px-3 py-2 rounded-lg text-[0.85rem]">
                                 <span>Skill 2</span>
-                                <span class="mockup-status missing"></span>
+                                <span class="w-2 h-2 rounded-full bg-danger"></span>
                             </div>
-                            <div class="mockup-skill-item">
+                            <div class="flex justify-between items-center bg-white/2 border border-borderColor px-3 py-2 rounded-lg text-[0.85rem]">
                                 <span>Skill 3</span>
-                                <span class="mockup-status has"></span>
+                                <span class="w-2 h-2 rounded-full bg-success"></span>
                             </div>
                         </div>
                     </div>
@@ -77,144 +161,240 @@
     </section>
 
     <!-- 3. Core Simulator Section -->
-    <section id="simulator" class="simulator-section">
-        <div class="container">
+    <section id="simulator" class="py-24 border-t border-borderColor">
+        <div class="max-w-[1200px] mx-auto px-6">
             
-            <div class="section-header">
-                <h2>Skill Gap Analyzer</h2>
-                <p>Input your current technical skills and select your target role to calculate your readiness score.</p>
+            <div class="text-center mb-14">
+                <h2 class="font-heading font-bold text-4xl mb-3">Skill Gap Analyzer</h2>
+                <p class="text-textMuted text-lg max-w-xl mx-auto">Input your current technical skills and select your target role to calculate your readiness score.</p>
             </div>
 
             <!-- Simulator Input Card -->
-            <div class="simulator-card">
-                <div class="steps-grid">
+            <div class="bg-bgCard border border-borderColor rounded-[1.25rem] p-10 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
                     
                     <!-- Step 1: Input Current Skills -->
-                    <div class="step-container">
-                        <div class="step-label">
-                            <span class="step-number">1</span>
+                    <div class="flex flex-col gap-5">
+                        <div class="flex items-center gap-3 font-heading text-[1.15rem] font-semibold">
+                            <span class="inline-grid place-items-center w-[1.8rem] h-[1.8rem] rounded-full bg-primary text-white text-[0.85rem] font-bold">1</span>
                             Add Your Current Skills
                         </div>
-                        <div class="skills-input-wrapper">
-                            <div class="input-group">
-                                <input type="text" id="skill-input" class="text-input" placeholder="Type a skill (e.g. JavaScript, SQL) and press Enter" aria-label="Add a skill">
-                                <button type="button" id="btn-add-skill" class="btn btn-primary">Add</button>
-                            </div>
+                        <div class="flex flex-col gap-3">
+                            <form action="/add_skill" method="POST" class="flex gap-2.5">
+                                <input type="text" name="skill" class="flex-grow bg-bgCard border border-borderColor rounded-[0.6rem] px-4 py-3 text-white font-sans text-[0.95rem] outline-none focus:border-primary focus:bg-primary/2 focus:shadow-[0_0_10px_rgba(99,102,241,0.1)] placeholder-textDark transition-all duration-200" placeholder="Type a skill (e.g. JavaScript, SQL) and press Enter" aria-label="Add a skill" required>
+                                <button type="submit" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] transition-all duration-200">Add</button>
+                            </form>
                             
                             <!-- Skill suggestions -->
                             <div>
-                                <div class="suggestions-title">Suggestions:</div>
-                                <div class="suggestions-list">
-                                    <button type="button" class="btn-suggestion" data-skill="React">React</button>
-                                    <button type="button" class="btn-suggestion" data-skill="SQL">SQL</button>
-                                    <button type="button" class="btn-suggestion" data-skill="Figma">Figma</button>
-                                    <button type="button" class="btn-suggestion" data-skill="Git">Git</button>
-                                    <button type="button" class="btn-suggestion" data-skill="Excel">Excel</button>
-                                    <button type="button" class="btn-suggestion" data-skill="Linux">Linux</button>
+                                <div class="suggestions-title text-[0.85rem] text-textDark font-semibold mt-1 mb-2">Suggestions:</div>
+                                <div class="flex flex-wrap gap-2">
+                                    {% for suggestion in ["React", "SQL", "Figma", "Git", "Excel", "Linux"] %}
+                                    <form action="/add_skill" method="POST" style="display: inline;">
+                                        <input type="hidden" name="skill" value="{{ suggestion }}">
+                                        <button type="submit" class="bg-white/2 border border-borderColor rounded-full px-3 py-1 text-[0.8rem] text-textMuted hover:bg-primary/10 hover:border-primary hover:text-textMain transition-all duration-200">{{ suggestion }}</button>
+                                    </form>
+                                    {% endfor %}
                                 </div>
                             </div>
                             
                             <!-- Main skills tags list -->
-                            <div id="skills-container" class="skills-container">
-                                <!-- Populated dynamically by script.js -->
+                            <div class="flex flex-wrap gap-2.5 min-h-[4.5rem] p-3 bg-black/15 border border-dashed border-borderColor rounded-[0.6rem] align-content-start">
+                                {% if not user_skills %}
+                                    <span class="text-[0.85rem] text-textDark italic">No skills added yet. Use suggestions or type above.</span>
+                                {% else %}
+                                    {% for skill in user_skills %}
+                                    <form action="/remove_skill" method="POST" style="display: inline;">
+                                        <input type="hidden" name="skill" value="{{ skill }}">
+                                        <span class="inline-flex items-center gap-1.5 bg-borderColor text-textMain px-3 py-1 rounded-full text-[0.85rem] font-medium hover:bg-[#2b3b5f] transition-all duration-200 animate-pop-in">
+                                            {{ skill }}
+                                            <button type="submit" class="text-textMuted hover:text-danger hover:bg-danger/15 rounded-full w-4 h-4 grid place-items-center transition-all duration-200" aria-label="Remove {{ skill }}">&times;</button>
+                                        </span>
+                                    </form>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
 
                     <!-- Step 2: Choose Target Career -->
-                    <div class="step-container">
-                        <div class="step-label">
-                            <span class="step-number">2</span>
-                            Select Target Career Path
-                        </div>
-                        <div class="career-grid">
-                            
-                            <!-- Career Option 1 -->
-                            <div class="career-card" data-career="frontend-dev">
-                                <div class="career-icon">🌐</div>
-                                <h4>Frontend Developer</h4>
-                                <p>HTML, CSS, React, Git, Webpack...</p>
+                    <div class="flex flex-col gap-5">
+                        <form action="/analyze" method="POST" id="analyze-form">
+                            <input type="hidden" name="unadded_skill" id="unadded-skill-hidden">
+                            <div class="flex items-center gap-3 font-heading text-[1.15rem] font-semibold mb-5">
+                                <span class="inline-grid place-items-center w-[1.8rem] h-[1.8rem] rounded-full bg-primary text-white text-[0.85rem] font-bold">2</span>
+                                Select Target Career Path
                             </div>
+                            <div class="flex flex-col gap-4">
+                                {% if not careers %}
+                                    <div class="text-[0.85rem] text-textDark italic">No career roles available.</div>
+                                {% else %}
+                                    <div class="relative w-full">
+                                        <select name="career_id" id="career-select" class="w-full bg-bgCard border border-borderColor rounded-[0.6rem] pl-4 pr-10 py-3.5 text-white font-sans text-[0.95rem] outline-none focus:border-primary focus:bg-primary/2 focus:shadow-[0_0_10px_rgba(99,102,241,0.1)] transition-all duration-200 cursor-pointer appearance-none" required>
+                                            <option value="" disabled {% if not selected_career_id %}selected{% endif %} class="bg-bgCard text-textMuted">-- Select a Target Career Path --</option>
+                                            {% for career in careers %}
+                                                <option value="{{ career.id }}" {% if selected_career_id == career.id %}selected{% endif %} class="bg-bgCard text-white">
+                                                    {{ career.title }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-textMuted">
+                                            <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
 
-                            <!-- Career Option 2 -->
-                            <div class="career-card" data-career="data-scientist">
-                                <div class="career-icon">📊</div>
-                                <h4>Data Scientist</h4>
-                                <p>Python, SQL, Pandas, Machine Learning...</p>
+                                    <!-- Dynamic Selected Career Details Card -->
+                                    <div id="career-details-card" class="hidden bg-white/2 border border-borderColor rounded-[0.75rem] p-5 flex flex-col gap-3 animate-fade-in">
+                                        <div class="flex items-center gap-3">
+                                            <span id="career-details-icon" class="text-3xl">💼</span>
+                                            <h4 id="career-details-title" class="text-[1.15rem] font-bold text-textMain"></h4>
+                                        </div>
+                                        <p id="career-details-desc" class="text-[0.9rem] text-textMuted leading-relaxed"></p>
+                                        <div class="flex flex-col gap-1.5 mt-1">
+                                            <span class="text-[0.8rem] text-textDark font-semibold uppercase tracking-wider">Required Skills:</span>
+                                            <div id="career-details-skills" class="flex flex-wrap gap-1.5"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- JSON Careers Data metadata -->
+                                    <script id="careers-data" type="application/json">
+                                      {
+                                        {% for career in careers %}
+                                          "{{ career.id }}": {
+                                            "title": "{{ career.title | escape }}",
+                                            "description": "{{ career.description | escape }}",
+                                            "icon": "{{ career_icons[career.id] or '💼' }}",
+                                            "skills": {{ career.requiredSkills | tojson }}
+                                          }{% if not loop.last %},{% endif %}
+                                        {% endfor %}
+                                      }
+                                    </script>
+                                {% endif %}
                             </div>
-
-                            <!-- Career Option 3 -->
-                            <div class="career-card" data-career="product-manager">
-                                <div class="career-icon">🎯</div>
-                                <h4>Product Manager</h4>
-                                <p>Agile, Wireframing, Data, Strategy...</p>
-                            </div>
-
-                            <!-- Career Option 4 -->
-                            <div class="career-card" data-career="cybersecurity-analyst">
-                                <div class="career-icon">🛡️</div>
-                                <h4>Cyber Security</h4>
-                                <p>Networking, Linux, Hacking, Wireshark...</p>
-                            </div>
-
-                        </div>
+                        </form>
                     </div>
 
                 </div>
 
                 <!-- Action trigger -->
-                <div class="analyzer-action-wrapper">
-                    <button type="button" id="btn-analyze" class="btn btn-primary btn-large">Analyze Skill Gap</button>
+                <div class="flex justify-center border-t border-borderColor pt-8">
+                    <button type="submit" form="analyze-form" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-12 py-4 rounded-[0.75rem] transition-all duration-200 shadow-lg hover:shadow-indigo-500/10">Analyze Skill Gap</button>
                 </div>
             </div>
 
-            <!-- 4. Simulator Results Panel (Initially hidden, revealed on analysis) -->
-            <div id="results-section" class="results-section">
-                <div class="results-grid">
+            <!-- 4. Simulator Results Panel -->
+            {% if results %}
+            <div id="results-section" class="mt-12 border-t border-borderColor pt-12 animate-slide-down">
+                <div class="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12">
                     
                     <!-- Left Panel: Score Gauge -->
-                    <div class="results-left">
-                        <div class="readiness-title">Your Career Readiness</div>
-                        <div class="progress-ring-container">
-                            <svg class="progress-ring" width="160" height="160">
-                                <circle class="progress-ring-circle-bg" cx="80" cy="80" r="70" />
-                                <circle id="progress-circle" class="progress-ring-circle" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="440" />
+                    <div class="flex flex-col items-center text-center gap-6 bg-black/10 border border-borderColor rounded-2xl p-8">
+                        <div class="text-[1.2rem] font-semibold">Your Career Readiness</div>
+                        <div class="relative w-40 h-40">
+                            <svg class="progress-ring -rotate-90" width="160" height="160">
+                                <circle class="fill-none stroke-borderColor stroke-[8]" cx="80" cy="80" r="70" />
+                                <circle id="progress-circle" class="fill-none stroke-primary stroke-[8] transition-all duration-1000 ease-out" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="{{ 440 - (results.readiness_score / 100) * 440 }}" stroke-linecap="round" />
                             </svg>
-                            <div id="readiness-score-text" class="progress-text">0%</div>
+                            <div id="readiness-score-text" class="absolute inset-0 flex items-center justify-center font-heading font-extrabold text-4xl text-textMain" data-score="{{ results.readiness_score }}">0%</div>
                         </div>
-                        <span id="readiness-label" class="readiness-level">Aspiring</span>
-                        <p id="readiness-desc" class="score-description">
-                            We compare your current skills against the industry standards for this job profile.
-                        </p>
+                        
+                        {% if results.readiness_score >= 80 %}
+                            <span class="px-4 py-1.5 rounded-full text-[0.85rem] font-bold uppercase tracking-wider bg-success/10 text-success">Career Ready</span>
+                            <p class="text-[0.9rem] text-textMuted leading-relaxed">
+                                Incredible work! You possess almost all the core skills needed for this target role. Focus on minor refinements or building a standout capstone project.
+                            </p>
+                        {% elif results.readiness_score >= 40 %}
+                            <span class="px-4 py-1.5 rounded-full text-[0.85rem] font-bold uppercase tracking-wider bg-amber-500/10 text-warning">Moderate Fit</span>
+                            <p class="text-[0.9rem] text-textMuted leading-relaxed">
+                                You have a solid foundation, but there are important skills missing. Follow the learning roadmap below to bridge the remaining gaps.
+                            </p>
+                        {% else %}
+                            <span class="px-4 py-1.5 rounded-full text-[0.85rem] font-bold uppercase tracking-wider bg-danger/10 text-danger">Aspiring</span>
+                            <p class="text-[0.9rem] text-textMuted leading-relaxed">
+                                You're at the beginning of your journey for this career. Don't worry! Everyone starts somewhere. Follow the structured roadmap step-by-step to build up your skillset.
+                            </p>
+                        {% endif %}
                     </div>
 
                     <!-- Right Panel: Gap & Roadmap -->
-                    <div class="results-right">
+                    <div class="flex flex-col gap-8">
                         
                         <!-- Skills Comparison lists -->
-                        <div class="results-skills-comparison">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <!-- Matched skills -->
-                            <div class="skills-list-box">
-                                <h5 class="matched">Matched Skills <span id="matched-count" class="badge-count">0</span></h5>
-                                <div id="matched-skills-list" class="result-pills">
-                                    <!-- Populated by script.js -->
+                            <div class="bg-white/1 border border-borderColor rounded-[0.75rem] p-5">
+                                <h5 class="text-[1rem] font-semibold mb-4 flex items-center gap-2 text-success">Matched Skills <span class="text-[0.75rem] bg-white/5 px-2 py-0.5 rounded-full text-textMuted">{{ results.matched_skills | length }}</span></h5>
+                                <div class="flex flex-wrap gap-2">
+                                    {% if not results.matched_skills %}
+                                        <span class="text-[0.85rem] text-textDark italic">No matching skills yet. Add more of your skills in Step 1!</span>
+                                    {% else %}
+                                        {% for skill in results.matched_skills %}
+                                            <span class="text-[0.8rem] px-3 py-1 rounded-full font-medium bg-success/10 border border-success/30 text-emerald-400">✓ {{ skill }}</span>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                             
                             <!-- Missing skills (gap) -->
-                            <div class="skills-list-box">
-                                <h5 class="missing">Missing Skills (Gap) <span id="missing-count" class="badge-count">0</span></h5>
-                                <div id="missing-skills-list" class="result-pills">
-                                    <!-- Populated by script.js -->
+                            <div class="bg-white/1 border border-borderColor rounded-[0.75rem] p-5">
+                                <h5 class="text-[1rem] font-semibold mb-4 flex items-center gap-2 text-danger">Missing Skills (Gap) <span class="text-[0.75rem] bg-white/5 px-2 py-0.5 rounded-full text-textMuted">{{ results.missing_skills | length }}</span></h5>
+                                <div class="flex flex-wrap gap-2">
+                                    {% if not results.missing_skills %}
+                                        <span class="text-[0.85rem] text-textDark italic">No missing skills! You've got it all.</span>
+                                    {% else %}
+                                        {% for skill in results.missing_skills %}
+                                            <span class="text-[0.8rem] px-3 py-1 rounded-full font-medium bg-danger/10 border border-danger/30 text-rose-400">✗ {{ skill }}</span>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
 
                         <!-- Roadmap Timeline -->
-                        <div class="roadmap-container">
-                            <h5>Your Learning Roadmap</h5>
-                            <div id="roadmap-timeline" class="roadmap-timeline">
-                                <!-- Populated by script.js -->
+                        <div class="bg-white/1 border border-borderColor rounded-[0.75rem] p-6">
+                            <h5 class="text-[1.1rem] font-semibold mb-5 border-b border-borderColor pb-3">Your Learning Roadmap</h5>
+                            <div class="relative flex flex-col">
+                                {% if not results.missing_skills %}
+                                    <div class="relative flex gap-4 pl-1">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-3 h-3 rounded-full border-2 border-bgCard bg-success z-10"></div>
+                                            <div class="w-0.5 h-full bg-borderColor z-0 -mt-0.5"></div>
+                                        </div>
+                                        <div class="pb-6">
+                                            <div class="text-[0.8rem] uppercase tracking-wider text-success font-bold mb-0.5">Fully Prepared</div>
+                                            <div class="text-[0.95rem] font-semibold text-textMain mb-1">All Gaps Solved!</div>
+                                            <div class="text-[0.85rem] text-textMuted">You match all required core skills for {{ results.career_title }}. Next steps: build portfolio projects, update your resume, and start applying!</div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                {% for step in results.roadmap %}
+                                    <div class="relative flex gap-4 pl-1">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-3 h-3 rounded-full border-2 border-bgCard {% if step.completed %}bg-success{% else %}bg-primary{% endif %} z-10"></div>
+                                            {% if not loop.last %}
+                                                <div class="w-0.5 h-full bg-borderColor z-0 -mt-0.5"></div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="pb-6">
+                                            <div class="text-[0.8rem] uppercase tracking-wider {% if step.completed %}text-success{% else %}text-primary{% endif %} font-bold mb-0.5">
+                                                {{ step.phase }} {% if step.completed %}✓ (Acquired){% else %}• (Learn Next){% endif %}
+                                            </div>
+                                            <div class="text-[0.95rem] font-semibold text-textMain mb-1">
+                                                {{ step.skill }}: {% if step.completed %}Verified Skill{% else %}Gap Identified{% endif %}
+                                            </div>
+                                            <div class="text-[0.85rem] text-textMuted">
+                                                {% if step.completed %}
+                                                    You already know <strong>{{ step.skill }}</strong>. This foundational step is completed!
+                                                {% else %}
+                                                    {{ step.topic }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
 
@@ -222,39 +402,40 @@
 
                 </div>
             </div>
+            {% endif %}
 
         </div>
     </section>
 
     <!-- 5. Features Grid Section -->
-    <section id="features" class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Why Choose Pathfinder AI?</h2>
-                <p>Equipping students with precise data to make intelligent career jumps.</p>
+    <section id="features" class="py-24 bg-black/10 border-t border-borderColor">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="text-center mb-14">
+                <h2 class="font-heading font-bold text-4xl mb-3">Why Choose Pathfinder AI?</h2>
+                <p class="text-textMuted text-lg max-w-xl mx-auto">Equipping students with precise data to make intelligent career jumps.</p>
             </div>
             
-            <div class="features-grid">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
                 <!-- Feature 1 -->
-                <div class="feature-box">
-                    <div class="feature-icon-wrapper">⚡</div>
-                    <h3>Real-time Gap Analysis</h3>
-                    <p>Input your skills and instantly see where you stack up against real-world tech careers. No wait time, no complications.</p>
+                <div class="bg-bgCard border border-borderColor rounded-2xl p-9 hover:border-primary hover:-translate-y-1.5 hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition-all duration-300 flex flex-col gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl">⚡</div>
+                    <h3 class="font-heading font-bold text-xl">Real-time Gap Analysis</h3>
+                    <p class="text-[0.95rem] text-textMuted leading-relaxed">Input your skills and instantly see where you stack up against real-world tech careers. No wait time, no complications.</p>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="feature-box">
-                    <div class="feature-icon-wrapper">🗺️</div>
-                    <h3>Personalized Roadmap</h3>
-                    <p>Get a sequential, step-by-step training checklist showing which missing skills to study first, and what concepts to focus on.</p>
+                <div class="bg-bgCard border border-borderColor rounded-2xl p-9 hover:border-primary hover:-translate-y-1.5 hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition-all duration-300 flex flex-col gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl">🗺️</div>
+                    <h3 class="font-heading font-bold text-xl">Personalized Roadmap</h3>
+                    <p class="text-[0.95rem] text-textMuted leading-relaxed">Get a sequential, step-by-step training checklist showing which missing skills to study first, and what concepts to focus on.</p>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="feature-box">
-                    <div class="feature-icon-wrapper">📈</div>
-                    <h3>Market Aligned Roles</h3>
-                    <p>Skill requirements are modeled from active job posts and standard developer certifications, ensuring you learn what is relevant.</p>
+                <div class="bg-bgCard border border-borderColor rounded-2xl p-9 hover:border-primary hover:-translate-y-1.5 hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition-all duration-300 flex flex-col gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl">📈</div>
+                    <h3 class="font-heading font-bold text-xl">Market Aligned Roles</h3>
+                    <p class="text-[0.95rem] text-textMuted leading-relaxed">Skill requirements are modeled from active job posts and standard developer certifications, ensuring you learn what is relevant.</p>
                 </div>
 
             </div>
@@ -262,15 +443,13 @@
     </section>
 
     <!-- 6. Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 Pathfinder AI. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Use</a>
-                    <a href="#">Contact</a>
-                </div>
+    <footer class="border-t border-borderColor py-12 bg-bgDark">
+        <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-sm text-textMuted">&copy; 2026 Pathfinder AI. All rights reserved.</p>
+            <div class="flex gap-6">
+                <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Terms of Use</a>
+                <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Contact</a>
             </div>
         </div>
     </footer>
