@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Scroll to results if present
     document.getElementById("results-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // 2. Numeric count-up animation for readiness score
     const scoreEl = document.getElementById("readiness-score-text");
     if (scoreEl) {
         const target = parseInt(scoreEl.getAttribute("data-score"), 10) || 0;
@@ -18,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 15);
     }
 
-    // 3. Dynamic career details card preview
     const selectEl = document.getElementById("career-select");
     const detailsCard = document.getElementById("career-details-card");
     const detailsIcon = document.getElementById("career-details-icon");
@@ -57,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 4. Mirror unsubmitted typed skill before analysis form submit
     const analyzeForm = document.getElementById("analyze-form");
     const skillInput = document.querySelector('input[name="skill"]');
     const hiddenSkillInput = document.getElementById("unadded-skill-hidden");

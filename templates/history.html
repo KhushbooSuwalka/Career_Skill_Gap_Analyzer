@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Records - Pathfinder AI</title>
+    <title>My Records - Career Pathfinder</title>
     <meta name="description" content="Access your previous career skill assessment logs and custom learning roadmaps.">
-    <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -34,12 +33,10 @@
             }
         }
     </script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -57,16 +54,14 @@
 </head>
 <body class="bg-bgDark text-textMain font-sans relative overflow-x-hidden min-h-screen">
 
-    <!-- Glowing background blurs -->
     <div class="absolute top-[5%] left-[-10%] w-[35rem] h-[35rem] rounded-full bg-primary/10 blur-[120px] -z-10 pointer-events-none"></div>
     <div class="absolute top-[45%] right-[-10%] w-[35rem] h-[35rem] rounded-full bg-success/10 blur-[120px] -z-10 pointer-events-none"></div>
 
-    <!-- 1. Header / Navigation -->
     <header class="border-b border-borderColor bg-bgDark/80 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center h-20">
             <a href="/" class="flex items-center gap-2.5 font-heading font-extrabold text-[1.3rem] text-textMain no-underline">
-                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">P</span>
-                Pathfinder AI
+                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">C</span>
+                Career Pathfinder
             </a>
             <nav class="hidden md:flex items-center gap-8">
                 <a href="/" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">Simulator</a>
@@ -76,10 +71,8 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <main class="max-w-[1000px] mx-auto px-6 py-16">
         
-        <!-- Header area -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
             <div>
                 <h1 class="font-heading font-bold text-4xl mb-2">My Skill Assessment Records</h1>
@@ -94,10 +87,8 @@
             {% endif %}
         </div>
 
-        <!-- Records List -->
         <div class="flex flex-col gap-8">
             {% if not history_records %}
-                <!-- Empty state -->
                 <div class="bg-bgCard border border-borderColor rounded-2xl p-12 text-center flex flex-col items-center gap-5 shadow-lg">
                     <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-4xl">🗂️</div>
                     <h3 class="font-heading font-bold text-xl">No Records Found</h3>
@@ -110,7 +101,6 @@
                 {% for record in history_records %}
                     <div class="bg-bgCard border border-borderColor rounded-2xl p-6 md:p-8 flex flex-col gap-6 shadow-md relative overflow-hidden">
                         
-                        <!-- Top header info -->
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-borderColor/60 pb-5">
                             <div class="flex items-center gap-4">
                                 <span class="text-4xl shrink-0">{{ career_icons[record.career_id] or '💼' }}</span>
@@ -119,7 +109,6 @@
                                     <span class="text-[0.8rem] text-textDark font-medium">{{ record.timestamp }}</span>
                                 </div>
                             </div>
-                            <!-- Circular score badge -->
                             <div class="flex items-center gap-3 self-start sm:self-auto bg-black/20 border border-borderColor/40 rounded-xl px-4 py-2">
                                 <span class="text-textMuted font-medium text-sm">Readiness:</span>
                                 <span class="font-heading font-extrabold text-xl {% if record.readiness_score >= 80 %}text-success{% elif record.readiness_score >= 40 %}text-warning{% else %}text-danger{% endif %}">
@@ -128,9 +117,7 @@
                             </div>
                         </div>
 
-                        <!-- Summary of skills and tags -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Matched skills -->
                             <div class="bg-white/1 border border-borderColor rounded-xl p-4 flex flex-col gap-3">
                                 <span class="text-[0.9rem] font-bold text-success flex items-center gap-2">
                                     Matched Skills ({{ record.matched_skills | length }})
@@ -146,7 +133,6 @@
                                 </div>
                             </div>
 
-                            <!-- Missing skills -->
                             <div class="bg-white/1 border border-borderColor rounded-xl p-4 flex flex-col gap-3">
                                 <span class="text-[0.9rem] font-bold text-danger flex items-center gap-2">
                                     Missing Gaps ({{ record.missing_skills | length }})
@@ -163,7 +149,6 @@
                             </div>
                         </div>
 
-                        <!-- Accordion Trigger for Roadmap -->
                         <div class="flex flex-wrap justify-between items-center gap-4 mt-2">
                             <button type="button" class="roadmap-toggle-btn bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary font-semibold text-[0.9rem] px-5 py-2.5 rounded-[0.6rem] transition-all duration-200 flex items-center gap-2" data-record-id="{{ record.id }}">
                                 🗺️ View Step-by-Step Learning Plan
@@ -172,7 +157,6 @@
                                 </svg>
                             </button>
                             
-                            <!-- Delete button -->
                             <form action="/delete_history/{{ record.id }}" method="POST" onsubmit="return confirm('Delete this record permanently?');">
                                 <button type="submit" class="text-textDark hover:text-danger hover:bg-danger/10 font-medium text-[0.85rem] px-4 py-2 rounded-[0.5rem] transition-all duration-200">
                                     Delete Record
@@ -233,10 +217,9 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="border-t border-borderColor py-12 mt-20 bg-bgDark">
         <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-sm text-textMuted">&copy; 2026 Pathfinder AI. All rights reserved.</p>
+            <p class="text-sm text-textMuted">&copy; 2026 Career Pathfinder. All rights reserved.</p>
             <div class="flex gap-6">
                 <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Privacy Policy</a>
                 <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Terms of Use</a>
@@ -245,7 +228,6 @@
         </div>
     </footer>
 
-    <!-- Accordion Script -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".roadmap-toggle-btn").forEach(button => {

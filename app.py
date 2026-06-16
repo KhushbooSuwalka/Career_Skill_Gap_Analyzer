@@ -24,7 +24,6 @@ CAREER_ICONS = {
     "blockchain-developer": "⛓️"
 }
 
-# Helper function to convert SQLite rows to dictionaries
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
@@ -47,7 +46,6 @@ def format_skill_name(skill_name):
         if word_lower in uppercase_skills:
             formatted_words.append(word_lower.upper())
         else:
-            # Capitalize first letter, keep rest as is if already mixed case, or lowercase
             formatted_words.append(word.capitalize())
     return " ".join(formatted_words)
 
@@ -59,12 +57,8 @@ def index():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        # Fetch all career metadata
         cursor.execute("SELECT id, title, description FROM careers")
         careers = cursor.fetchall()
-        
-        # Fetch and attach required skills to each career profile
         for career in careers:
             cursor.execute(
                 "SELECT skill FROM roadmap_steps WHERE career_id = ? ORDER BY sort_order",
@@ -72,13 +66,11 @@ def index():
             )
             steps = cursor.fetchall()
             career['requiredSkills'] = [step['skill'] for step in steps]
-            
         conn.close()
     except Exception as e:
         careers = []
         print("Database error:", e)
         
-    # Pop results and selected career from session to implement PRG (reset on refresh)
     results = session.pop('results', None)
     selected_career_id = session.pop('selected_career_id', None)
         
@@ -117,7 +109,6 @@ def remove_skill():
 def analyze():
     career_id = request.form.get('career_id')
     unadded_skill = request.form.get('unadded_skill')
-    
     user_skills = session.get('user_skills', [])
     
     if unadded_skill:
@@ -132,8 +123,6 @@ def analyze():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        # 1. Fetch all careers to render the form again
         cursor.execute("SELECT id, title, description FROM careers")
         careers = cursor.fetchall()
         for career in careers:
@@ -144,7 +133,6 @@ def analyze():
             steps = cursor.fetchall()
             career['requiredSkills'] = [step['skill'] for step in steps]
             
-        # 2. Validate selected career
         cursor.execute("SELECT title FROM careers WHERE id = ?", (career_id,))
         career_meta = cursor.fetchone()
         
@@ -152,7 +140,6 @@ def analyze():
             conn.close()
             return redirect(url_for('index'))
             
-        # 3. Fetch roadmap steps
         cursor.execute(
             "SELECT skill, phase, topic, sort_order FROM roadmap_steps WHERE career_id = ? ORDER BY sort_order",
             (career_id,)
@@ -160,7 +147,6 @@ def analyze():
         roadmap_steps = cursor.fetchall()
         conn.close()
         
-        # 4. Perform analysis
         matched_skills = []
         missing_skills = []
         processed_roadmap = []
@@ -168,7 +154,6 @@ def analyze():
         for step in roadmap_steps:
             skill_name = step['skill']
             skill_name_upper = skill_name.upper()
-            
             is_matched = False
             for u_skill in user_skills_upper:
                 if u_skill == skill_name_upper or u_skill in skill_name_upper or skill_name_upper in u_skill:
@@ -200,7 +185,6 @@ def analyze():
             "roadmap": processed_roadmap
         }
         
-        # Archive results to history database
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -235,8 +219,6 @@ def history():
         history_records = []
         for row in rows:
             u_skills = json.loads(row['user_skills'])
-            
-            # Reconstruct historic results
             cursor.execute(
                 "SELECT skill, phase, topic, sort_order FROM roadmap_steps WHERE career_id = ? ORDER BY sort_order",
                 (row['career_id'],)
@@ -246,14 +228,12 @@ def history():
             matched_skills = []
             missing_skills = []
             processed_roadmap = []
-            
-            u_skills_upper = [s.upper() for s in u_skills]
+            user_skills_upper = [s.upper() for s in u_skills]
             for step in roadmap_steps:
                 skill_name = step['skill']
                 skill_name_upper = skill_name.upper()
-                
                 is_matched = False
-                for u_skill in u_skills_upper:
+                for u_skill in user_skills_upper:
                     if u_skill == skill_name_upper or u_skill in skill_name_upper or skill_name_upper in u_skill:
                         is_matched = True
                         break
@@ -318,4 +298,3 @@ def clear_history():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-

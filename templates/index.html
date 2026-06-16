@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathfinder AI - Career Skill Gap Analyzer</title>
+    <title>Career Pathfinder - Career Skill Gap Analyzer</title>
     <meta name="description" content="Instantly analyze your professional skills, compare them against target careers, and generate a step-by-step personalized learning roadmap.">
-    <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -34,12 +33,10 @@
             }
         }
     </script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Small custom animations & styles not natively available in Tailwind */
         @keyframes popIn {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -61,7 +58,6 @@
         .animate-fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -75,7 +71,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #3b82f6;
         }
-        /* Custom styling for select option elements to prevent browser default text invisibility */
         select option {
             background-color: #131b2e !important;
             color: #ffffff !important;
@@ -84,16 +79,14 @@
 </head>
 <body class="bg-bgDark text-textMain font-sans relative overflow-x-hidden min-h-screen">
 
-    <!-- Glowing background blurs -->
     <div class="absolute top-[5%] left-[-10%] w-[35rem] h-[35rem] rounded-full bg-primary/10 blur-[120px] -z-10 pointer-events-none"></div>
     <div class="absolute top-[45%] right-[-10%] w-[35rem] h-[35rem] rounded-full bg-success/10 blur-[120px] -z-10 pointer-events-none"></div>
 
-    <!-- 1. Header / Navigation -->
     <header class="border-b border-borderColor bg-bgDark/80 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center h-20">
             <a href="#" class="flex items-center gap-2.5 font-heading font-extrabold text-[1.3rem] text-textMain no-underline">
-                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">P</span>
-                Pathfinder AI
+                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">C</span>
+                Career Pathfinder
             </a>
             <nav class="hidden md:flex items-center gap-8">
                 <a href="#features" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">Features</a>
@@ -105,12 +98,10 @@
         </div>
     </header>
 
-    <!-- 2. Hero Section -->
     <section id="hero" class="py-20 relative">
         <div class="max-w-[1200px] mx-auto px-6">
             <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
                 
-                <!-- Left Hero Content -->
                 <div class="flex flex-col items-start text-left">
                     <h1 class="font-heading font-bold text-5xl lg:text-6xl tracking-tight leading-tight mb-6">
                         Bridge the Gap to Your <span class="bg-gradient-to-r from-indigo-300 via-primary to-indigo-700 bg-clip-text text-transparent">Dream Career</span>
@@ -124,7 +115,6 @@
                     </div>
                 </div>
 
-                <!-- Right Hero Dashboard Mockup -->
                 <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-borderColor rounded-[1.25rem] p-8 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-transparent before:pointer-events-none">
                     <div class="flex justify-between items-center mb-6 border-b border-borderColor pb-4">
                         <div class="flex gap-1.5">
@@ -161,7 +151,6 @@
         </div>
     </section>
 
-    <!-- 3. Core Simulator Section -->
     <section id="simulator" class="py-24 border-t border-borderColor">
         <div class="max-w-[1200px] mx-auto px-6">
             
@@ -170,11 +159,9 @@
                 <p class="text-textMuted text-lg max-w-xl mx-auto">Input your current technical skills and select your target role to calculate your readiness score.</p>
             </div>
 
-            <!-- Simulator Input Card -->
             <div class="bg-bgCard border border-borderColor rounded-[1.25rem] p-10 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
                     
-                    <!-- Step 1: Input Current Skills -->
                     <div class="flex flex-col gap-5">
                         <div class="flex items-center gap-3 font-heading text-[1.15rem] font-semibold">
                             <span class="inline-grid place-items-center w-[1.8rem] h-[1.8rem] rounded-full bg-primary text-white text-[0.85rem] font-bold">1</span>
@@ -186,7 +173,6 @@
                                 <button type="submit" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] transition-all duration-200">Add</button>
                             </form>
                             
-                            <!-- Skill suggestions -->
                             <div>
                                 <div class="suggestions-title text-[0.85rem] text-textDark font-semibold mt-1 mb-2">Suggestions:</div>
                                 <div class="flex flex-wrap gap-2">
@@ -199,7 +185,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Main skills tags list -->
                             <div class="flex flex-wrap gap-2.5 min-h-[4.5rem] p-3 bg-black/15 border border-dashed border-borderColor rounded-[0.6rem] align-content-start">
                                 {% if not user_skills %}
                                     <span class="text-[0.85rem] text-textDark italic">No skills added yet. Use suggestions or type above.</span>
@@ -218,7 +203,6 @@
                         </div>
                     </div>
 
-                    <!-- Step 2: Choose Target Career -->
                     <div class="flex flex-col gap-5">
                         <form action="/analyze" method="POST" id="analyze-form">
                             <input type="hidden" name="unadded_skill" id="unadded-skill-hidden">
@@ -246,7 +230,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dynamic Selected Career Details Card -->
                                     <div id="career-details-card" class="hidden bg-white/2 border border-borderColor rounded-[0.75rem] p-5 flex flex-col gap-3 animate-fade-in">
                                         <div class="flex items-center gap-3">
                                             <span id="career-details-icon" class="text-3xl">💼</span>
@@ -259,7 +242,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- JSON Careers Data metadata -->
                                     <script id="careers-data" type="application/json">
                                       {
                                         {% for career in careers %}
@@ -279,18 +261,15 @@
 
                 </div>
 
-                <!-- Action trigger -->
                 <div class="flex justify-center border-t border-borderColor pt-8">
                     <button type="submit" form="analyze-form" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-12 py-4 rounded-[0.75rem] transition-all duration-200 shadow-lg hover:shadow-indigo-500/10">Analyze Skill Gap</button>
                 </div>
             </div>
 
-            <!-- 4. Simulator Results Panel -->
             {% if results %}
             <div id="results-section" class="mt-12 border-t border-borderColor pt-12 animate-slide-down">
                 <div class="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12">
                     
-                    <!-- Left Panel: Score Gauge -->
                     <div class="flex flex-col items-center text-center gap-6 bg-black/10 border border-borderColor rounded-2xl p-8">
                         <div class="text-[1.2rem] font-semibold">Your Career Readiness</div>
                         <div class="relative w-40 h-40">
@@ -319,12 +298,9 @@
                         {% endif %}
                     </div>
 
-                    <!-- Right Panel: Gap & Roadmap -->
                     <div class="flex flex-col gap-8">
                         
-                        <!-- Skills Comparison lists -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <!-- Matched skills -->
                             <div class="bg-white/1 border border-borderColor rounded-[0.75rem] p-5">
                                 <h5 class="text-[1rem] font-semibold mb-4 flex items-center gap-2 text-success">Matched Skills <span class="text-[0.75rem] bg-white/5 px-2 py-0.5 rounded-full text-textMuted">{{ results.matched_skills | length }}</span></h5>
                                 <div class="flex flex-wrap gap-2">
@@ -338,7 +314,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Missing skills (gap) -->
                             <div class="bg-white/1 border border-borderColor rounded-[0.75rem] p-5">
                                 <h5 class="text-[1rem] font-semibold mb-4 flex items-center gap-2 text-danger">Missing Skills (Gap) <span class="text-[0.75rem] bg-white/5 px-2 py-0.5 rounded-full text-textMuted">{{ results.missing_skills | length }}</span></h5>
                                 <div class="flex flex-wrap gap-2">
@@ -353,7 +328,6 @@
                             </div>
                         </div>
 
-                        <!-- Roadmap Timeline -->
                         <div class="bg-white/1 border border-borderColor rounded-[0.75rem] p-6">
                             <h5 class="text-[1.1rem] font-semibold mb-5 border-b border-borderColor pb-3">Your Learning Roadmap</h5>
                             <div class="relative flex flex-col">
@@ -408,31 +382,27 @@
         </div>
     </section>
 
-    <!-- 5. Features Grid Section -->
     <section id="features" class="py-24 bg-black/10 border-t border-borderColor">
         <div class="max-w-[1200px] mx-auto px-6">
             <div class="text-center mb-14">
-                <h2 class="font-heading font-bold text-4xl mb-3">Why Choose Pathfinder AI?</h2>
+                <h2 class="font-heading font-bold text-4xl mb-3">Why Choose Career Pathfinder?</h2>
                 <p class="text-textMuted text-lg max-w-xl mx-auto">Equipping students with precise data to make intelligent career jumps.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
-                <!-- Feature 1 -->
                 <div class="bg-bgCard border border-borderColor rounded-2xl p-9 hover:border-primary hover:-translate-y-1.5 hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition-all duration-300 flex flex-col gap-4">
                     <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl">⚡</div>
                     <h3 class="font-heading font-bold text-xl">Real-time Gap Analysis</h3>
                     <p class="text-[0.95rem] text-textMuted leading-relaxed">Input your skills and instantly see where you stack up against real-world tech careers. No wait time, no complications.</p>
                 </div>
 
-                <!-- Feature 2 -->
                 <div class="bg-bgCard border border-borderColor rounded-2xl p-9 hover:border-primary hover:-translate-y-1.5 hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition-all duration-300 flex flex-col gap-4">
                     <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl">🗺️</div>
                     <h3 class="font-heading font-bold text-xl">Personalized Roadmap</h3>
                     <p class="text-[0.95rem] text-textMuted leading-relaxed">Get a sequential, step-by-step training checklist showing which missing skills to study first, and what concepts to focus on.</p>
                 </div>
 
-                <!-- Feature 3 -->
                 <div class="bg-bgCard border border-borderColor rounded-2xl p-9 hover:border-primary hover:-translate-y-1.5 hover:shadow-[0_10px_30px_rgba(0,0,0,0.15)] transition-all duration-300 flex flex-col gap-4">
                     <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl">📈</div>
                     <h3 class="font-heading font-bold text-xl">Market Aligned Roles</h3>
@@ -443,10 +413,9 @@
         </div>
     </section>
 
-    <!-- 6. Footer -->
     <footer class="border-t border-borderColor py-12 bg-bgDark">
         <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-sm text-textMuted">&copy; 2026 Pathfinder AI. All rights reserved.</p>
+            <p class="text-sm text-textMuted">&copy; 2026 Career Pathfinder. All rights reserved.</p>
             <div class="flex gap-6">
                 <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Privacy Policy</a>
                 <a href="#" class="text-sm text-textDark hover:text-textMuted transition-colors duration-200">Terms of Use</a>
@@ -455,7 +424,6 @@
         </div>
     </footer>
 
-    <!-- Script loading -->
     <script src="/static/script.js"></script>
 </body>
 </html>
