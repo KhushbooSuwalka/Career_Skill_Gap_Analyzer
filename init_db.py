@@ -13,6 +13,16 @@ def init_database():
     cursor = conn.cursor()
     
     cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            skills TEXT DEFAULT '[]',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS careers (
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
@@ -35,11 +45,13 @@ def init_database():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS skill_checks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
             career_id TEXT NOT NULL,
             career_title TEXT NOT NULL,
             readiness_score INTEGER NOT NULL,
             user_skills TEXT NOT NULL,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id),
             FOREIGN KEY (career_id) REFERENCES careers (id)
         )
     ''')

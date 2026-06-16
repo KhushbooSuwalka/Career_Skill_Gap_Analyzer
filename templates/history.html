@@ -67,7 +67,16 @@
                 <a href="/" class="text-textMuted hover:text-textMain font-medium text-[0.95rem] transition-colors duration-200">Simulator</a>
                 <a href="/history" class="text-textMain font-semibold text-[0.95rem] transition-colors duration-200">My Records</a>
             </nav>
-            <a href="/" class="border border-borderColor text-textMain font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] hover:bg-white/5 hover:border-textMuted transition-all duration-200">Back to Home</a>
+            <div class="flex items-center gap-4">
+                {% if session.get('username') %}
+                    <span class="hidden sm:inline text-textMuted text-[0.95rem]">
+                        Hello, <strong class="text-textMain">{{ session.get('username') }}</strong>
+                    </span>
+                    <a href="/logout" class="border border-borderColor text-textMain font-semibold text-[0.95rem] px-5 py-2 rounded-[0.6rem] hover:bg-danger/10 hover:border-danger/30 transition-all duration-200">Log Out</a>
+                {% else %}
+                    <a href="/auth" class="bg-primary hover:bg-primaryHover text-white font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] transition-all duration-200">Sign In</a>
+                {% endif %}
+            </div>
         </div>
     </header>
 

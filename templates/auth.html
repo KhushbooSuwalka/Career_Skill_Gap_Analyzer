@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Access - Career Pathfinder</title>
+    <meta name="description" content="Sign in or register to track your career readiness and access your personalized skill roadmaps.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#090d16',
+                        bgCard: '#131b2e',
+                        bgCardHover: '#1b253f',
+                        borderColor: '#222f4d',
+                        borderHover: '#3b82f6',
+                        primary: '#6366f1',
+                        primaryHover: '#4f46e5',
+                        success: '#10b981',
+                        danger: '#f43f5e',
+                        warning: '#f59e0b',
+                        textMain: '#f8fafc',
+                        textMuted: '#94a3b8',
+                        textDark: '#64748b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-bgDark text-textMain font-sans relative overflow-x-hidden min-h-screen flex flex-col">
+
+    <div class="absolute top-[10%] left-[-10%] w-[30rem] h-[30rem] rounded-full bg-primary/10 blur-[120px] -z-10 pointer-events-none"></div>
+    <div class="absolute bottom-[10%] right-[-10%] w-[30rem] h-[30rem] rounded-full bg-success/10 blur-[120px] -z-10 pointer-events-none"></div>
+
+    <header class="border-b border-borderColor bg-bgDark/80 backdrop-blur-md">
+        <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center h-20">
+            <a href="/" class="flex items-center gap-2.5 font-heading font-extrabold text-[1.3rem] text-textMain no-underline">
+                <span class="w-8 h-8 bg-gradient-to-br from-primary to-primaryHover rounded-[0.5rem] grid place-items-center text-white font-bold text-[1.1rem]">C</span>
+                Career Pathfinder
+            </a>
+            <a href="/" class="border border-borderColor text-textMain font-semibold text-[0.95rem] px-6 py-2.5 rounded-[0.6rem] hover:bg-white/5 hover:border-textMuted transition-all duration-200">Back to Simulator</a>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-6 py-16">
+        <div class="w-full max-w-[450px] bg-bgCard/80 backdrop-blur-md border border-borderColor rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)] animate-pop-in relative overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-borderColor mb-8">
+                <button id="tab-login" class="flex-1 pb-3 text-center font-heading font-bold text-lg border-b-2 transition-all duration-200 border-primary text-textMain" onclick="switchTab('login')">
+                    Login
+                </button>
+                <button id="tab-register" class="flex-1 pb-3 text-center font-heading font-bold text-lg border-b-2 transition-all duration-200 border-transparent text-textMuted hover:text-textMain" onclick="switchTab('register')">
+                    Register
+                </button>
+            </div>
+
+            <!-- Error/Success Alert Box -->
+            <div id="alert-box" class="hidden mb-6 p-4 rounded-lg text-sm border"></div>
+
+            <!-- Login Form -->
+            <form id="form-login" action="/login" method="POST" class="flex flex-col gap-5">
+                <input type="hidden" name="next" value="{{ next_url or '' }}">
+                <div class="flex flex-col gap-2">
+                    <label for="login-username" class="text-sm font-semibold text-textMuted">Username</label>
+                    <input type="text" id="login-username" name="username" required 
+                           class="bg-black/20 border border-borderColor rounded-lg px-4 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                           placeholder="Enter your username">
+                </div>
+                <div class="flex flex-col gap-2 relative">
+                    <label for="login-password" class="text-sm font-semibold text-textMuted">Password</label>
+                    <div class="relative">
+                        <input type="password" id="login-password" name="password" required 
+                               class="w-full bg-black/20 border border-borderColor rounded-lg pl-4 pr-10 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                               placeholder="Enter your password">
+                        <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-textMain">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="mt-2 bg-primary hover:bg-primaryHover text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-indigo-500/10 transition-all duration-200">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="form-register" action="/register" method="POST" class="hidden flex flex-col gap-5">
+                <input type="hidden" name="next" value="{{ next_url or '' }}">
+                <div class="flex flex-col gap-2">
+                    <label for="register-username" class="text-sm font-semibold text-textMuted">Username</label>
+                    <input type="text" id="register-username" name="username" required 
+                           class="bg-black/20 border border-borderColor rounded-lg px-4 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                           placeholder="Choose a username">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="register-password" class="text-sm font-semibold text-textMuted">Password</label>
+                    <div class="relative">
+                        <input type="password" id="register-password" name="password" required 
+                               class="w-full bg-black/20 border border-borderColor rounded-lg pl-4 pr-10 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                               placeholder="Create a strong password">
+                        <button type="button" onclick="togglePasswordVisibility('register-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-textMain">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="register-confirm" class="text-sm font-semibold text-textMuted">Confirm Password</label>
+                    <div class="relative">
+                        <input type="password" id="register-confirm" required 
+                               class="w-full bg-black/20 border border-borderColor rounded-lg pl-4 pr-10 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                               placeholder="Re-enter password">
+                        <button type="button" onclick="togglePasswordVisibility('register-confirm', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-textMain">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="mt-2 bg-success hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-emerald-500/10 transition-all duration-200">
+                    Create Account
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="border-t border-borderColor py-8 bg-bgDark">
+        <div class="max-w-[1200px] mx-auto px-6 text-center">
+            <p class="text-xs text-textDark">&copy; 2026 Career Pathfinder. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(mode) {
+            const loginTab = document.getElementById('tab-login');
+            const registerTab = document.getElementById('tab-register');
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+
+            if (mode === 'login') {
+                loginTab.classList.add('border-primary', 'text-textMain');
+                loginTab.classList.remove('border-transparent', 'text-textMuted');
+                registerTab.classList.remove('border-primary', 'text-textMain');
+                registerTab.classList.add('border-transparent', 'text-textMuted');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                registerTab.classList.add('border-primary', 'text-textMain');
+                registerTab.classList.remove('border-transparent', 'text-textMuted');
+                loginTab.classList.remove('border-primary', 'text-textMain');
+                loginTab.classList.add('border-transparent', 'text-textMuted');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+            }
+        }
+
+        function togglePasswordVisibility(fieldId, button) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+                button.textContent = '🔒';
+            } else {
+                field.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // Handle confirm password validation
+        const registerForm = document.getElementById('form-register');
+        const passwordField = document.getElementById('register-password');
+        const confirmField = document.getElementById('register-confirm');
+        const alertBox = document.getElementById('alert-box');
+
+        registerForm.addEventListener('submit', function (e) {
+            if (passwordField.value !== confirmField.value) {
+                e.preventDefault();
+                showAlert('Passwords do not match.', 'danger');
+            }
+        });
+
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = 'mb-6 p-4 rounded-lg text-sm border';
+            if (type === 'danger') {
+                alertBox.classList.add('bg-danger/10', 'border-danger/30', 'text-danger');
+            } else {
+                alertBox.classList.add('bg-success/10', 'border-success/30', 'text-success');
+            }
+            alertBox.classList.remove('hidden');
+        }
+
+        // Initialize from URL parameters
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode');
+            const error = params.get('error');
+            const success = params.get('success');
+
+            if (mode === 'register') {
+                switchTab('register');
+            } else {
+                switchTab('login');
+            }
+
+            if (error) {
+                showAlert(error, 'danger');
+            } else if (success) {
+                showAlert(success, 'success');
+            }
+        });
+    </script>
+</body>
+</html>
