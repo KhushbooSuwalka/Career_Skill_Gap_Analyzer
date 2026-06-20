@@ -64,13 +64,19 @@
     <main class="flex-grow flex items-center justify-center px-6 py-16">
         <div class="w-full max-w-[450px] bg-bgCard/80 backdrop-blur-md border border-borderColor rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)] animate-pop-in relative overflow-hidden">
             <!-- Tabs -->
-            <div class="flex border-b border-borderColor mb-8">
+            <div id="tab-container" class="flex border-b border-borderColor mb-8">
                 <button id="tab-login" class="flex-1 pb-3 text-center font-heading font-bold text-lg border-b-2 transition-all duration-200 border-primary text-textMain" onclick="switchTab('login')">
                     Login
                 </button>
                 <button id="tab-register" class="flex-1 pb-3 text-center font-heading font-bold text-lg border-b-2 transition-all duration-200 border-transparent text-textMuted hover:text-textMain" onclick="switchTab('register')">
                     Register
                 </button>
+            </div>
+
+            <!-- Forgot Password Heading -->
+            <div id="forgot-heading" class="hidden mb-8">
+                <h2 class="font-heading font-bold text-2xl text-textMain text-center">Reset Password</h2>
+                <p class="text-sm text-textMuted mt-2 text-center">Enter your details to reset your password.</p>
             </div>
 
             <!-- Error/Success Alert Box -->
@@ -95,6 +101,16 @@
                             👁️
                         </button>
                     </div>
+                </div>
+                <!-- Remember Me & Forgot Password Options -->
+                <div class="flex justify-between items-center text-sm my-1">
+                    <label class="flex items-center gap-2 text-textMuted cursor-pointer select-none">
+                        <input type="checkbox" name="remember" class="w-4 h-4 rounded border-borderColor bg-black/20 text-primary accent-[#6366f1] focus:ring-primary focus:ring-offset-bgDark transition-all duration-200">
+                        Remember me
+                    </label>
+                    <button type="button" onclick="switchTab('forgot')" class="text-primary hover:text-primaryHover hover:underline transition-all duration-200">
+                        Forgot password?
+                    </button>
                 </div>
                 <button type="submit" class="mt-2 bg-primary hover:bg-primaryHover text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-indigo-500/10 transition-all duration-200">
                     Sign In
@@ -136,6 +152,46 @@
                     Create Account
                 </button>
             </form>
+
+            <!-- Forgot Password Form -->
+            <form id="form-forgot" action="/reset-password" method="POST" class="hidden flex flex-col gap-5">
+                <div class="flex flex-col gap-2">
+                    <label for="forgot-username" class="text-sm font-semibold text-textMuted">Username</label>
+                    <input type="text" id="forgot-username" name="username" required 
+                           class="bg-black/20 border border-borderColor rounded-lg px-4 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                           placeholder="Enter your username">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="forgot-password" class="text-sm font-semibold text-textMuted">New Password</label>
+                    <div class="relative">
+                        <input type="password" id="forgot-password" name="password" required 
+                               class="w-full bg-black/20 border border-borderColor rounded-lg pl-4 pr-10 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                               placeholder="Create a new password">
+                        <button type="button" onclick="togglePasswordVisibility('forgot-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-textMain">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label for="forgot-confirm" class="text-sm font-semibold text-textMuted">Confirm New Password</label>
+                    <div class="relative">
+                        <input type="password" id="forgot-confirm" required 
+                               class="w-full bg-black/20 border border-borderColor rounded-lg pl-4 pr-10 py-3 text-white outline-none focus:border-primary focus:shadow-[0_0_10px_rgba(99,102,241,0.15)] transition-all duration-200"
+                               placeholder="Re-enter new password">
+                        <button type="button" onclick="togglePasswordVisibility('forgot-confirm', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-textMain">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="mt-2 bg-warning hover:bg-amber-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-amber-500/10 transition-all duration-200">
+                    Reset Password
+                </button>
+                <div class="text-center mt-2">
+                    <button type="button" onclick="switchTab('login')" class="text-sm text-textMuted hover:text-textMain transition-all duration-200">
+                        &larr; Back to Login
+                    </button>
+                </div>
+            </form>
         </div>
     </main>
 
@@ -151,21 +207,41 @@
             const registerTab = document.getElementById('tab-register');
             const loginForm = document.getElementById('form-login');
             const registerForm = document.getElementById('form-register');
+            const forgotForm = document.getElementById('form-forgot');
+            const tabContainer = document.getElementById('tab-container');
+            const forgotHeading = document.getElementById('forgot-heading');
 
             if (mode === 'login') {
                 loginTab.classList.add('border-primary', 'text-textMain');
                 loginTab.classList.remove('border-transparent', 'text-textMuted');
                 registerTab.classList.remove('border-primary', 'text-textMain');
                 registerTab.classList.add('border-transparent', 'text-textMuted');
+                
                 loginForm.classList.remove('hidden');
                 registerForm.classList.add('hidden');
-            } else {
+                forgotForm.classList.add('hidden');
+                
+                tabContainer.classList.remove('hidden');
+                forgotHeading.classList.add('hidden');
+            } else if (mode === 'register') {
                 registerTab.classList.add('border-primary', 'text-textMain');
                 registerTab.classList.remove('border-transparent', 'text-textMuted');
                 loginTab.classList.remove('border-primary', 'text-textMain');
                 loginTab.classList.add('border-transparent', 'text-textMuted');
+                
                 registerForm.classList.remove('hidden');
                 loginForm.classList.add('hidden');
+                forgotForm.classList.add('hidden');
+                
+                tabContainer.classList.remove('hidden');
+                forgotHeading.classList.add('hidden');
+            } else if (mode === 'forgot') {
+                loginForm.classList.add('hidden');
+                registerForm.classList.add('hidden');
+                forgotForm.classList.remove('hidden');
+                
+                tabContainer.classList.add('hidden');
+                forgotHeading.classList.remove('hidden');
             }
         }
 
@@ -184,10 +260,22 @@
         const registerForm = document.getElementById('form-register');
         const passwordField = document.getElementById('register-password');
         const confirmField = document.getElementById('register-confirm');
+        
+        const forgotForm = document.getElementById('form-forgot');
+        const forgotPasswordField = document.getElementById('forgot-password');
+        const forgotConfirmField = document.getElementById('forgot-confirm');
+        
         const alertBox = document.getElementById('alert-box');
 
         registerForm.addEventListener('submit', function (e) {
             if (passwordField.value !== confirmField.value) {
+                e.preventDefault();
+                showAlert('Passwords do not match.', 'danger');
+            }
+        });
+
+        forgotForm.addEventListener('submit', function (e) {
+            if (forgotPasswordField.value !== forgotConfirmField.value) {
                 e.preventDefault();
                 showAlert('Passwords do not match.', 'danger');
             }
@@ -213,6 +301,8 @@
 
             if (mode === 'register') {
                 switchTab('register');
+            } else if (mode === 'forgot') {
+                switchTab('forgot');
             } else {
                 switchTab('login');
             }

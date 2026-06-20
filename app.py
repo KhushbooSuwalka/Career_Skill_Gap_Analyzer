@@ -136,6 +136,12 @@ def login():
         session['user_id'] = user['id']
         session['username'] = user['username']
         
+        # Configure session permanence for Remember Me
+        if request.form.get('remember'):
+            session.permanent = True
+        else:
+            session.permanent = False
+            
         db_skills = json.loads(user['skills']) if user['skills'] else []
         guest_skills = session.get('user_skills', [])
         merged_skills = list(db_skills)
@@ -155,6 +161,35 @@ def login():
     except Exception as e:
         print("Login error:", e)
         return redirect(url_for('auth', mode='login', error='An error occurred during login.'))
+
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    username = request.form.get('username', '').strip()
+    password = request.form.get('password', '')
+    
+    if not username or not password:
+        return redirect(url_for('auth', mode='forgot', error='Username and new password are required.'))
+        
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+        user = cursor.fetchone()
+        
+        if not user:
+            conn.close()
+            return redirect(url_for('auth', mode='forgot', error='Username not found.'))
+            
+        password_hash = generate_password_hash(password)
+        cursor.execute("UPDATE users SET password_hash = ? WHERE username = ?", (password_hash, username))
+        conn.commit()
+        conn.close()
+        
+        return redirect(url_for('auth', mode='login', success='Password reset successfully! You can now log in.'))
+        
+    except Exception as e:
+        print("Password reset error:", e)
+        return redirect(url_for('auth', mode='forgot', error='An error occurred during password reset.'))
 
 @app.route('/logout')
 def logout():
@@ -207,7 +242,7 @@ def add_skill():
             session.modified = True
             if 'user_id' in session:
                 update_user_skills_in_db(session['user_id'], user_skills)
-    return redirect(url_for('index'))
+    return redirect(url_for('index', _anchor='simulator'))
 
 @app.route('/remove_skill', methods=['POST'])
 def remove_skill():
@@ -219,7 +254,7 @@ def remove_skill():
         session.modified = True
         if 'user_id' in session:
             update_user_skills_in_db(session['user_id'], user_skills)
-    return redirect(url_for('index'))
+    return redirect(url_for('index', _anchor='simulator'))
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
