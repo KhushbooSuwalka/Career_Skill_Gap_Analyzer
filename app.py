@@ -20,6 +20,22 @@ app = Flask(__name__)
 app.secret_key = 'super-secret-key-for-career-pathfinder'
 DATABASE_FILE = 'careers.db'
 
+def check_db_schema():
+    try:
+        conn = sqlite3.connect(DATABASE_FILE)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(users)")
+        columns = [row[1] for row in cursor.fetchall()]
+        if 'phone' not in columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN phone TEXT")
+            conn.commit()
+            print("Added 'phone' column to 'users' table.")
+        conn.close()
+    except Exception as e:
+        print("Error checking/updating db schema:", e)
+
+check_db_schema()
+
 CAREER_ICONS = {
     "frontend-dev": "🌐",
     "data-scientist": "📊",
@@ -75,10 +91,11 @@ def auth():
 def register():
     username = request.form.get('username', '').strip()
     password = request.form.get('password', '')
+    phone = request.form.get('phone', '').strip()
     next_url = request.form.get('next', '')
     
-    if not username or not password:
-        return redirect(url_for('auth', mode='register', error='Username and password are required.'))
+    if not username or not password or not phone:
+        return redirect(url_for('auth', mode='register', error='Username, password, and phone number are required.'))
         
     try:
         conn = get_db_connection()
@@ -92,8 +109,8 @@ def register():
         guest_skills = session.get('user_skills', ["HTML", "CSS", "Python"])
         
         cursor.execute(
-            "INSERT INTO users (username, password_hash, skills) VALUES (?, ?, ?)",
-            (username, password_hash, json.dumps(guest_skills))
+            "INSERT INTO users (username, password_hash, phone, skills) VALUES (?, ?, ?, ?)",
+            (username, password_hash, phone, json.dumps(guest_skills))
         )
         conn.commit()
         
@@ -165,20 +182,21 @@ def login():
 @app.route('/reset-password', methods=['POST'])
 def reset_password():
     username = request.form.get('username', '').strip()
+    phone = request.form.get('phone', '').strip()
     password = request.form.get('password', '')
     
-    if not username or not password:
-        return redirect(url_for('auth', mode='forgot', error='Username and new password are required.'))
+    if not username or not phone or not password:
+        return redirect(url_for('auth', mode='forgot', error='Username, phone number, and new password are required.'))
         
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+        cursor.execute("SELECT id FROM users WHERE username = ? AND phone = ?", (username, phone))
         user = cursor.fetchone()
         
         if not user:
             conn.close()
-            return redirect(url_for('auth', mode='forgot', error='Username not found.'))
+            return redirect(url_for('auth', mode='forgot', error='Username or phone number not found/incorrect.'))
             
         password_hash = generate_password_hash(password)
         cursor.execute("UPDATE users SET password_hash = ? WHERE username = ?", (password_hash, username))
